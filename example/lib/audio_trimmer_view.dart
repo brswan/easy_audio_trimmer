@@ -130,6 +130,8 @@ class _AudioTrimmerViewState extends State<AudioTrimmerView> {
                                 setState(() => _isPlaying = value);
                               }
                             },
+                            // trimStartTime: 10 * 1000,
+                            // trimEndTime: 20 * 1000,
                           ),
                         ),
                       ),

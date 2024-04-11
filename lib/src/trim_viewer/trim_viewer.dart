@@ -141,8 +141,11 @@ class TrimViewer extends StatefulWidget {
 
   final bool allowAudioSelection;
 
+  final double trimStartTime;
+  final double trimEndTime;
+
   const TrimViewer(
-      {Key? key,
+      {super.key,
       required this.trimmer,
       this.maxAudioLength = const Duration(milliseconds: 0),
       this.viewerWidth = 50 * 8,
@@ -158,8 +161,9 @@ class TrimViewer extends StatefulWidget {
       this.areaProperties = const TrimAreaProperties(),
       this.backgroundColor,
       this.allowAudioSelection = true,
-      this.barColor})
-      : super(key: key);
+      this.barColor,
+      this.trimStartTime = 0,
+      this.trimEndTime = 0});
 
   @override
   State<TrimViewer> createState() => _TrimViewerState();
@@ -210,6 +214,8 @@ class _TrimViewerState extends State<TrimViewer> with TickerProviderStateMixin {
       backgroundColor: widget.backgroundColor,
       allowAudioSelection: widget.allowAudioSelection,
       barColor: widget.barColor,
+      trimStartTime: widget.trimStartTime,
+      trimEndTime: widget.trimEndTime,
       areaProperties: FixedTrimAreaProperties(
         borderRadius: widget.areaProperties.borderRadius,
       ),

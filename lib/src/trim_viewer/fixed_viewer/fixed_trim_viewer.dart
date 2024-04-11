@@ -118,6 +118,8 @@ class FixedTrimViewer extends StatefulWidget {
   final Color? backgroundColor;
 
   final bool allowAudioSelection;
+  final double trimStartTime;
+  final double trimEndTime;
 
   const FixedTrimViewer(
       {super.key,
@@ -135,7 +137,9 @@ class FixedTrimViewer extends StatefulWidget {
       this.areaProperties = const FixedTrimAreaProperties(),
       this.barColor,
       this.backgroundColor,
-      required this.allowAudioSelection});
+      required this.allowAudioSelection,
+      this.trimStartTime = 0,
+      this.trimEndTime = 0});
 
   @override
   State<FixedTrimViewer> createState() => _FixedTrimViewerState();
@@ -242,16 +246,40 @@ class _FixedTrimViewerState extends State<FixedTrimViewer>
           maxLengthPixels = _barViewerW;
         }
 
-        _audioEndPos = fraction != null
-            ? _audioDuration.toDouble() * fraction!
-            : _audioDuration.toDouble();
+        if (widget.trimEndTime == 0) {
+          _audioEndPos = fraction != null
+              ? _audioDuration.toDouble() * fraction!
+              : _audioDuration.toDouble();
 
+          _endPos = Offset(
+            maxLengthPixels != null ? maxLengthPixels! : _barViewerW,
+            _barViewerH,
+          );
+        } else {
+          _audioEndPos = widget.trimEndTime;
+
+          var pixelPerMs = _barViewerW / _audioDuration;
+          var padding = pixelPerMs * widget.trimEndTime;
+
+          _endPos = Offset(
+            padding,
+            _barViewerH,
+          );
+        }
         widget.onChangeEnd!(_audioEndPos);
 
-        _endPos = Offset(
-          maxLengthPixels != null ? maxLengthPixels! : _barViewerW,
-          _barViewerH,
-        );
+        if (widget.trimStartTime != 0) {
+          _audioStartPos = widget.trimStartTime;
+          widget.onChangeStart!(_audioEndPos);
+
+          var pixelPerMs = _barViewerW / _audioDuration;
+          var padding = pixelPerMs * widget.trimStartTime;
+
+          _startPos = Offset(
+            padding,
+            0,
+          );
+        }
 
         // Defining the tween points
         _linearTween = Tween(begin: _startPos.dx, end: _endPos.dx);
